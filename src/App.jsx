@@ -66,7 +66,7 @@ function AdBanner() {
     return () => clearInterval(timer)
   }, [])
   return (
-    <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', height: 120, overflow: 'hidden', borderRadius: 16, boxShadow: '0 2px 12px #0001', marginBottom: 32, position: 'relative', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, color: '#333', fontWeight: 600 }}>
+    <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', height: 120, overflow: 'hidden', borderRadius: 32, boxShadow: '0 2px 12px #0001', marginBottom: 32, position: 'relative', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, color: '#333', fontWeight: 600, border: '3px solid #fbbf24' }}>
       <span style={{ zIndex: 3, position: 'relative', background: 'rgba(255,255,255,0.8)', padding: '0 24px', borderRadius: 8 }}>益智小游戏乐园广告位，欢迎投放！</span>
       {adImages.map((img, i) => (
         <img
@@ -82,7 +82,8 @@ function AdBanner() {
             objectFit: 'cover',
             opacity: i === index ? 0.3 : 0,
             transition: 'opacity 1s',
-            zIndex: 1
+            zIndex: 1,
+            borderRadius: 32
           }}
         />
       ))}
@@ -118,13 +119,16 @@ function Home() {
         <p style={{ color: '#4b5563', fontSize: '1.2rem', marginBottom: 32 }}>欢迎来到益智小游戏乐园，点击下方按钮开始游戏！</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
           {shuffled.map((num, i) => (
-            <a key={i} href={`#/game/${num}`} style={{ textDecoration: 'none' }}>
-              <button style={{ padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 600 }}
-                onMouseOver={e => e.currentTarget.style.transform = 'scale(1.08)'}
-                onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
-                {gameNames[num-1] || `游戏${num}`}
-              </button>
-            </a>
+            <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
+              <a href={`#/game/${num}`} style={{ textDecoration: 'none' }}>
+                <button style={{ padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 600 }}
+                  onMouseOver={e => e.currentTarget.style.transform = 'scale(1.08)'}
+                  onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
+                  {gameNames[num-1] || `游戏${num}`}
+                </button>
+              </a>
+              <span style={{marginTop:4, color:'#fbbf24', fontWeight:600, fontSize:14}}>{gameNames[num-1] || `游戏${num}`}</span>
+            </div>
           ))}
         </div>
       </div>
@@ -187,11 +191,13 @@ function GamePage() {
     }
   }
 
+  // 顶部广告图片
+  const adUrlH = (n) => `https://via.placeholder.com/900x80?text=广告${n}`;
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8fafc 0%,#e0e7ef 100%)', padding: 0 }}>
       {/* 顶部广告 */}
-      <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', marginTop: 24 }}>
-        {/* <img src={adUrlH(1)} alt="顶部广告" style={{ width: '100%', borderRadius: 12, boxShadow: '0 2px 12px #0001' }} /> */}
+      <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', marginTop: 24, borderRadius: 24, overflow: 'hidden', border: '3px solid #fbbf24' }}>
+        <img src={adUrlH(1)} alt="顶部广告" style={{ width: '100%', borderRadius: 24 }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
         {/* 左广告 */}
