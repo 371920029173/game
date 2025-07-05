@@ -125,6 +125,27 @@ function Home() {
   )
 }
 
+function GoogleAd() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+    script.setAttribute('crossorigin', 'anonymous');
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+  return (
+    <ins className="adsbygoogle"
+      style={{ display: 'block', textAlign: 'center', margin: '16px 0' }}
+      data-ad-client="ca-pub-xxxxxxxxxxxxxxxx"
+      data-ad-slot="1234567890"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+  );
+}
+
 const gameComponents = [
   Game01, Game02, Game03, Game04, Game05, Game06, Game07, Game08, Game09, Game10,
   Game11, Game12, Game13, Game14, Game15, Game16, Game17, Game18, Game19, Game20,
@@ -135,6 +156,9 @@ function GamePage() {
   const { id } = useParams();
   const idx = Number(id) - 1;
   const GameComp = gameComponents[idx];
+  useEffect(() => {
+    document.title = `游戏${id} - 益智小游戏乐园`;
+  }, [id]);
   // 广告图片
   const adUrl = (n) => `https://via.placeholder.com/180x400?text=广告${n}`
   const adUrlH = (n) => `https://via.placeholder.com/900x80?text=广告${n}`
@@ -162,6 +186,7 @@ function GamePage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8fafc 0%,#e0e7ef 100%)', padding: 0 }}>
+      <GoogleAd />
       {/* 顶部广告 */}
       <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', marginTop: 24 }}>
         <img src={adUrlH(1)} alt="顶部广告" style={{ width: '100%', borderRadius: 12, boxShadow: '0 2px 12px #0001' }} />
@@ -173,7 +198,7 @@ function GamePage() {
         </div>
         {/* 游戏区 */}
         <div style={{ flex: '1 1 600px', maxWidth: 600, minWidth: 320, background: '#fff', borderRadius: 16, boxShadow: '0 2px 16px #0002', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <h2 style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 16 }}>游戏{id}</h2>
+          <h2 style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 16 }}>{`游戏${id}`}</h2>
           <div style={{ width: '100%', height: 320, background: '#f3f4f6', borderRadius: 12, marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, color: '#9ca3af' }}>
             {GameComp ? <GameComp /> : `游戏${id}内容区（待开发）`}
           </div>
@@ -206,6 +231,7 @@ function GamePage() {
         <img src={adUrlH(4)} alt="底部广告1" style={{ width: '50%', borderRadius: 12, boxShadow: '0 2px 12px #0001' }} />
         <img src={adUrlH(5)} alt="底部广告2" style={{ width: '50%', borderRadius: 12, boxShadow: '0 2px 12px #0001' }} />
       </div>
+      <GoogleAd />
     </div>
   )
 }
