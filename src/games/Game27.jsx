@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const SIZE = 5;
 const N = SIZE * SIZE;
+const MAX_ROUNDS = 100;
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -16,6 +17,7 @@ export default function Game27() {
   const [msg, setMsg] = useState('');
   const [start, setStart] = useState(null);
   const [best, setBest] = useState(() => Number(localStorage.getItem('game27_best')) || 0);
+  const [round, setRound] = useState(1);
 
   const handleClick = idx => {
     if (nums[idx] === next) {
@@ -27,6 +29,15 @@ export default function Game27() {
           setBest(t);
           localStorage.setItem('game27_best', t);
         }
+        if (round < MAX_ROUNDS) {
+          setTimeout(() => {
+            setNums(shuffle(Array.from({ length: N }, (_, i) => i + 1)));
+            setNext(1);
+            setMsg('');
+            setStart(null);
+            setRound(r => r + 1);
+          }, 1200);
+        }
       } else {
         setNext(n => n + 1);
       }
@@ -37,11 +48,12 @@ export default function Game27() {
     setNext(1);
     setMsg('');
     setStart(null);
+    setRound(1);
   };
   return (
     <div style={{ width: 320, margin: '0 auto', textAlign: 'center' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-        <span>最佳: {best ? best + 'ms' : '无'}</span>
+        <span>数字顺序挑战 | 第{round}/{MAX_ROUNDS}局 | 最佳: {best ? best + 'ms' : '无'}</span>
         <button onClick={restart} style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 12px', cursor: 'pointer' }}>重开</button>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIZE}, 1fr)`, gap: 6, background: '#bdbdbd', padding: 6, borderRadius: 8, marginBottom: 12 }}>
@@ -50,7 +62,7 @@ export default function Game27() {
         ))}
       </div>
       <div style={{ color: '#22c55e', fontWeight: 700, minHeight: 24 }}>{msg}</div>
-      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>按顺序点击1到{N}，用时越短越好！</div>
+      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>按顺序点击1到{N}，用时越短越好！共100局挑战！</div>
     </div>
   );
 } 

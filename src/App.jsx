@@ -100,38 +100,93 @@ function shuffle(arr) {
   return a;
 }
 
+// 游戏中文名，顺序与gameComponents一致
 const gameNames = [
-  '2048', '贪吃蛇', '扫雷', '五子棋', '翻牌配对', '华容道', '推箱子', '俄罗斯方块', '数独', '连连看',
-  '拼图', '记忆力', '消消乐', '拼单词', '数钱', '找不同', '拼图2', '迷宫', '打地鼠', '猜数字',
-  '数独2', '数独3', '数独4', '数独5', '数独6', '数独7', '数独8', '数独9', '数独10', '数独11',
-  '跑酷1', '跑酷2', '跑酷3', '跑酷4', '跑酷5'
+  '2048合成', // 1
+  '贪吃蛇',
+  '扫雷',
+  '五子棋',
+  '翻牌配对',
+  '华容道',
+  '推箱子',
+  '俄罗斯方块',
+  '连连看',
+  '迷宫闯关',
+  '记忆翻牌',
+  '消消乐',
+  '打地鼠',
+  '九宫拼图',
+  '彩色消除',
+  '单词拼拼乐',
+  '单词拼写',
+  '数独',
+  '灯泡开关',
+  '黑白翻转棋',
+  '记忆配对',
+  '数字华容道',
+  '极速打字',
+  '数字找规律',
+  '颜色记忆大师',
+  '大型扫雷',
+  '数字顺序挑战',
+  '图片拼图',
+  '反应力测试',
+  '数字合成',
+  '横版跑酷',
+  '竖版躲避',
+  '星星收集',
+  '跳跃攀爬',
+  '金币跑酷',
 ];
+
+// 游戏分组顺序（按分类固定）
+const gameGroups = [
+  {
+    name: '益智闯关',
+    games: [0, 5, 6, 8, 9, 13, 14, 17, 21, 22, 25, 26, 27], // 2048, 华容道, 推箱子, 连连看, 迷宫, 九宫拼图, 彩色消除, 数独, 数字华容道, 极速打字, 数字找规律, 颜色记忆, 数字顺序
+  },
+  {
+    name: '反应挑战',
+    games: [1, 12, 28, 29, 30, 31, 32, 33, 34], // 贪吃蛇, 打地鼠, 反应力, 数字合成, 横版跑酷, 竖版躲避, 星星收集, 跳跃攀爬, 金币跑酷
+  },
+  {
+    name: '记忆力',
+    games: [4, 10, 20, 24], // 翻牌配对, 记忆翻牌, 记忆配对, 颜色记忆大师
+  },
+  {
+    name: '数字逻辑',
+    games: [2, 16, 18, 19, 23], // 扫雷, 单词拼写, 灯泡开关, 黑白翻转棋, 数独
+  },
+  {
+    name: '休闲趣味',
+    games: [3, 7, 11, 15, 35], // 五子棋, 俄罗斯方块, 消消乐, 单词拼拼乐, 金币跑酷
+  },
+];
+
 function Home() {
-  // 跑酷游戏索引
-  const runnerGames = [30, 31, 32, 33, 34]; // Game31~Game35
-  const allGames = Array.from({ length: 35 }, (_, i) => i + 1);
-  const shuffled = shuffle(allGames);
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8fafc 0%,#e0e7ef 100%)', paddingBottom: 40, boxSizing: 'border-box' }}>
       <AdBanner />
       <div style={{ textAlign: 'center', padding: '2rem 0' }}>
         <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: '#2d3a4b', marginBottom: 8 }}>益智小游戏乐园</h1>
         <p style={{ color: '#4b5563', fontSize: '1.2rem', marginBottom: 32 }}>欢迎来到益智小游戏乐园，点击下方按钮开始游戏！</p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
-          {shuffled.map((num, i) => (
-            <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center', minWidth: 120}}>
-              <span style={{marginBottom:4, color:'#222', fontWeight:700, fontSize:16, lineHeight:'1.2'}}>{gameNames[num-1] || `游戏${num}`}</span>
-              <a href={`#/game/${num}`} style={{ textDecoration: 'none', width: '100%' }}>
-                <button aria-label={gameNames[num-1] || `游戏${num}`} title={gameNames[num-1] || `游戏${num}`}
-                  style={{ width: '100%', minWidth: 100, padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem 0', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 600 }}
-                  onMouseOver={e => e.currentTarget.style.transform = 'scale(1.08)'}
-                  onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
-                  {gameNames[num-1] || `游戏${num}`}
-                </button>
-              </a>
+        {gameGroups.map((group, gi) => (
+          <div key={gi} style={{ marginBottom: 32 }}>
+            <h2 style={{ color: '#2563eb', fontWeight: 700, fontSize: '1.4rem', margin: '24px 0 12px' }}>{group.name}</h2>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
+              {group.games.map(idx => (
+                <a key={idx} href={`#/game/${idx+1}`} style={{ textDecoration: 'none', minWidth: 120 }}>
+                  <button aria-label={gameNames[idx]} title={gameNames[idx]}
+                    style={{ width: '100%', minWidth: 100, padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem 0', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 700, color: '#222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    onMouseOver={e => e.currentTarget.style.transform = 'scale(1.08)'}
+                    onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
+                    {gameNames[idx]}
+                  </button>
+                </a>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -214,8 +269,8 @@ function GamePage() {
       </div>
       <div style={{ width: '100%', flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 24, boxSizing: 'border-box' }}>
         {/* 游戏区 */}
-        <div ref={contentRef} style={{ flex: '1 1 600px', maxWidth: 600, minWidth: 280, background: '#fff', borderRadius: 16, boxShadow: '0 2px 16px #0002', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0, transform: 'translateY(40px)', width: '100%', boxSizing: 'border-box' }}>
-          <h2 style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 16, color: '#222' }}>{gameNames[idx] || `游戏${id}`}</h2>
+        <div ref={contentRef} style={{ maxWidth: 480, margin: '0 auto', background: '#fff', borderRadius: 16, boxShadow: '0 2px 12px #0001', padding: 24, marginTop: 32 }}>
+          <h2 style={{ textAlign: 'center', fontWeight: 800, fontSize: '2rem', color: '#222', marginBottom: 16 }}>{gameNames[idx] || `游戏${id}`}</h2>
           <div style={{ width: '100%', height: 'min(320px,40vw)', background: '#f3f4f6', borderRadius: 12, marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, color: '#9ca3af', minHeight: 180 }}>
             {GameComp ? <GameComp /> : `${gameNames[idx] || `游戏${id}`}内容区（待开发）`}
           </div>

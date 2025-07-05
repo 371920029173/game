@@ -4,6 +4,7 @@ const COLORS = ['#fbbf24', '#38bdf8', '#ef4444', '#22d3ee', '#a3e635'];
 function genSeq(len) {
   return Array.from({ length: len }, () => COLORS[Math.floor(Math.random() * COLORS.length)]);
 }
+const MAX_LEVEL = 500;
 
 export default function Game25() {
   const [level, setLevel] = useState(1);
@@ -13,11 +14,12 @@ export default function Game25() {
   const [msg, setMsg] = useState('');
 
   const start = () => {
-    setSeq(genSeq(2 + level));
+    const nextLevel = Math.min(level, MAX_LEVEL);
+    setSeq(genSeq(2 + nextLevel));
     setShow(true);
     setInput([]);
     setMsg('');
-    setTimeout(() => setShow(false), 1200 + level * 400);
+    setTimeout(() => setShow(false), 1200 + nextLevel * 400);
   };
   const handleClick = c => {
     if (show) return;
@@ -26,7 +28,7 @@ export default function Game25() {
       if (next.length === seq.length) {
         if (next.join() === seq.join()) {
           setMsg('恭喜通过，进入下一关！');
-          setLevel(l => l + 1);
+          setLevel(l => Math.min(l + 1, MAX_LEVEL));
           setTimeout(start, 1200);
         } else {
           setMsg('记错了，重新开始！');
@@ -41,7 +43,7 @@ export default function Game25() {
   return (
     <div style={{ width: 320, margin: '0 auto', textAlign: 'center' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-        <span>关卡: {level}</span>
+        <span>颜色记忆大师 | 关卡: {level}</span>
         <button onClick={start} style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 12px', cursor: 'pointer' }}>重开</button>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 16 }}>
@@ -55,7 +57,7 @@ export default function Game25() {
         ))}
       </div>}
       <div style={{ color: msg.includes('恭喜') ? '#22c55e' : '#ef4444', fontWeight: 700, marginTop: 16 }}>{msg}</div>
-      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>记住颜色顺序，依次点击还原，关卡递增更难！</div>
+      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>记住颜色顺序，依次点击还原，关卡递增更难！（最高500关）</div>
     </div>
   );
 } 
