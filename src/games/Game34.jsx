@@ -72,6 +72,15 @@ export default function Game34() {
     ]);
   };
 
+  // 屏幕操作面板
+  const moveLeft = () => { if (!over) setPlayerX(x => Math.max(0, x - 24)); };
+  const moveRight = () => { if (!over) setPlayerX(x => Math.min(GAME_W - PLAYER_W, x + 24)); };
+  const controls = [
+    { label: '←', onClick: moveLeft },
+    { label: '→', onClick: moveRight },
+    { label: '重开', onClick: restart },
+  ];
+
   return (
     <div style={{ width: GAME_W, margin: '0 auto', textAlign: 'center' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -85,7 +94,13 @@ export default function Game34() {
         ))}
       </svg>
       {over && <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 12 }}>游戏结束！分数: {score}，按R重开</div>}
-      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>左右方向键移动，跳跃攀爬平台，挑战高分！</div>
+      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>左右方向键或下方按钮移动，跳跃攀爬平台，挑战高分！</div>
+      {/* 屏幕操作面板 */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 16 }}>
+        {controls.map((c, i) => (
+          <button key={i} onClick={c.onClick} style={{ minWidth: 48, minHeight: 48, fontSize: 20, borderRadius: 12, background: '#f3f4f6', border: '2px solid #2563eb', color: '#2563eb', fontWeight: 700, boxShadow: '0 1px 4px #0001', cursor: 'pointer', margin: 4 }}>{c.label}</button>
+        ))}
+      </div>
     </div>
   );
 } 
