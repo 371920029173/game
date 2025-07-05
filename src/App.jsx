@@ -112,23 +112,23 @@ function Home() {
   const allGames = Array.from({ length: 35 }, (_, i) => i + 1);
   const shuffled = shuffle(allGames);
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8fafc 0%,#e0e7ef 100%)', paddingBottom: 40 }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8fafc 0%,#e0e7ef 100%)', paddingBottom: 40, boxSizing: 'border-box' }}>
       <AdBanner />
       <div style={{ textAlign: 'center', padding: '2rem 0' }}>
         <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: '#2d3a4b', marginBottom: 8 }}>益智小游戏乐园</h1>
         <p style={{ color: '#4b5563', fontSize: '1.2rem', marginBottom: 32 }}>欢迎来到益智小游戏乐园，点击下方按钮开始游戏！</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
           {shuffled.map((num, i) => (
-            <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
-              <a href={`#/game/${num}`} style={{ textDecoration: 'none' }}>
+            <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center', minWidth: 120}}>
+              <span style={{marginBottom:4, color:'#222', fontWeight:700, fontSize:16, lineHeight:'1.2'}}>{gameNames[num-1] || `游戏${num}`}</span>
+              <a href={`#/game/${num}`} style={{ textDecoration: 'none', width: '100%' }}>
                 <button aria-label={gameNames[num-1] || `游戏${num}`} title={gameNames[num-1] || `游戏${num}`}
-                  style={{ padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 600 }}
+                  style={{ width: '100%', minWidth: 100, padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem 0', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 600 }}
                   onMouseOver={e => e.currentTarget.style.transform = 'scale(1.08)'}
                   onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
                   {gameNames[num-1] || `游戏${num}`}
                 </button>
               </a>
-              <span style={{marginTop:4, color:'#fbbf24', fontWeight:600, fontSize:14}}>{gameNames[num-1] || `游戏${num}`}</span>
             </div>
           ))}
         </div>
@@ -207,24 +207,20 @@ function GamePage() {
   // 顶部广告图片
   const adUrlH = (n) => `https://via.placeholder.com/900x80?text=广告${n}`;
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8fafc 0%,#e0e7ef 100%)', padding: 0 }}>
+    <div style={{ minHeight: '100vh', minWidth: 0, background: 'linear-gradient(135deg,#f8fafc 0%,#e0e7ef 100%)', padding: 0, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {/* 顶部广告 */}
-      <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', marginTop: 24, borderRadius: 24, overflow: 'hidden', border: '3px solid #fbbf24' }}>
-        <img src={adUrlH(1)} alt="顶部广告" style={{ width: '100%', borderRadius: 24 }} />
+      <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', marginTop: 24, borderRadius: 24, overflow: 'hidden', border: '3px solid #fbbf24', boxSizing: 'border-box' }}>
+        <img src={adUrlH(1)} alt="顶部广告" style={{ width: '100%', borderRadius: 24, display: 'block' }} />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
-        {/* 左广告 */}
-        {/* <div style={{ flex: '0 0 180px', marginRight: 16 }}>
-          <img src={adUrl(2)} alt="左广告" style={{ width: 180, height: 400, borderRadius: 12, boxShadow: '0 2px 12px #0001', objectFit: 'cover' }} />
-        </div> */}
+      <div style={{ width: '100%', flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 24, boxSizing: 'border-box' }}>
         {/* 游戏区 */}
-        <div ref={contentRef} style={{ flex: '1 1 600px', maxWidth: 600, minWidth: 320, background: '#fff', borderRadius: 16, boxShadow: '0 2px 16px #0002', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0, transform: 'translateY(40px)' }}>
-          <h2 style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 16 }}>{gameNames[idx] || `游戏${id}`}</h2>
-          <div style={{ width: '100%', height: 320, background: '#f3f4f6', borderRadius: 12, marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, color: '#9ca3af' }}>
+        <div ref={contentRef} style={{ flex: '1 1 600px', maxWidth: 600, minWidth: 280, background: '#fff', borderRadius: 16, boxShadow: '0 2px 16px #0002', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0, transform: 'translateY(40px)', width: '100%', boxSizing: 'border-box' }}>
+          <h2 style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 16, color: '#222' }}>{gameNames[idx] || `游戏${id}`}</h2>
+          <div style={{ width: '100%', height: 'min(320px,40vw)', background: '#f3f4f6', borderRadius: 12, marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, color: '#9ca3af', minHeight: 180 }}>
             {GameComp ? <GameComp /> : `${gameNames[idx] || `游戏${id}`}内容区（待开发）`}
           </div>
           {/* 互动区 */}
-          <div style={{ width: '100%', background: '#f9fafb', borderRadius: 8, padding: 16, marginBottom: 24, boxShadow: '0 1px 4px #0001' }}>
+          <div style={{ width: '100%', background: '#f9fafb', borderRadius: 8, padding: 16, marginBottom: 24, boxShadow: '0 1px 4px #0001', boxSizing: 'border-box' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
               <button onClick={handleLike} style={{ background: '#fbbf24', border: 'none', borderRadius: 6, padding: '6px 18px', fontWeight: 600, color: '#fff', cursor: 'pointer', fontSize: 18, boxShadow: '0 1px 4px #0001' }}>👍 点赞 {likes}</button>
               <input value={commentInput} onChange={e => setCommentInput(e.target.value)} placeholder="写下你的评论..." style={{ flex: 1, padding: 8, borderRadius: 6, border: '1px solid #e5e7eb', fontSize: 16 }} />
@@ -237,17 +233,12 @@ function GamePage() {
             </div>
           </div>
           {/* 玩法介绍区 */}
-          <div style={{ width: '100%', background: '#f3f4f6', borderRadius: 8, padding: 18, color: '#374151', fontSize: 16, boxShadow: '0 1px 4px #0001' }}>
+          <div style={{ width: '100%', background: '#f3f4f6', borderRadius: 8, padding: 18, color: '#374151', fontSize: 16, boxShadow: '0 1px 4px #0001', boxSizing: 'border-box' }}>
             <h3 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>玩法与目的</h3>
             <div>{gameNames[idx] || `游戏${id}`}的玩法与目标介绍。</div>
           </div>
         </div>
-        {/* 右广告 */}
-        {/* <div style={{ flex: '0 0 180px', marginLeft: 16 }}>
-          <img src={adUrl(3)} alt="右广告" style={{ width: 180, height: 400, borderRadius: 12, boxShadow: '0 2px 12px #0001', objectFit: 'cover' }} />
-        </div> */}
       </div>
-      {/* <GoogleAd /> */}
     </div>
   )
 }
