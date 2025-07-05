@@ -24,36 +24,42 @@ export default function Game07() {
   const [map, setMap] = useState(() => clone(LEVEL[0]));
   const [moves, setMoves] = useState(0);
 
+  // 方向移动逻辑
+  const move = (dx, dy) => {
+    if (isWin(map)) return;
+    const [px, py] = findPlayer(map);
+    const tx = px + dx, ty = py + dy;
+    if (map[ty][tx] === 1) return;
+    if (map[ty][tx] === 3 || map[ty][tx] === 2 && map[ty][tx] !== 4) {
+      const bx = tx + dx, by = ty + dy;
+      if (map[by][bx] === 1 || map[by][bx] === 3) return;
+      const newMap = clone(map);
+      if (map[by][bx] === 2) newMap[by][bx] = 0; else newMap[by][bx] = 3;
+      newMap[ty][tx] = 4;
+      newMap[py][px] = 0;
+      if (map[ty][tx] === 2) newMap[ty][tx] = 4;
+      else newMap[ty][tx] = 4;
+      newMap[by][bx] = 3;
+      setMap(newMap);
+      setMoves(m => m + 1);
+      return;
+    }
+    if (map[ty][tx] === 0 || map[ty][tx] === 2) {
+      const newMap = clone(map);
+      newMap[ty][tx] = 4;
+      newMap[py][px] = 0;
+      setMap(newMap);
+      setMoves(m => m + 1);
+    }
+  };
+
   useEffect(() => {
     const handleKey = e => {
       if (isWin(map)) return;
       const dirs = { ArrowUp: [0,-1], ArrowDown: [0,1], ArrowLeft: [-1,0], ArrowRight: [1,0] };
       if (!dirs[e.key]) return;
       const [dx, dy] = dirs[e.key];
-      const [px, py] = findPlayer(map);
-      const tx = px + dx, ty = py + dy;
-      if (map[ty][tx] === 1) return;
-      if (map[ty][tx] === 3 || map[ty][tx] === 2 && map[ty][tx] !== 4) {
-        const bx = tx + dx, by = ty + dy;
-        if (map[by][bx] === 1 || map[by][bx] === 3) return;
-        const newMap = clone(map);
-        if (map[by][bx] === 2) newMap[by][bx] = 0; else newMap[by][bx] = 3;
-        newMap[ty][tx] = 4;
-        newMap[py][px] = 0;
-        if (map[ty][tx] === 2) newMap[ty][tx] = 4;
-        else newMap[ty][tx] = 4;
-        newMap[by][bx] = 3;
-        setMap(newMap);
-        setMoves(m => m + 1);
-        return;
-      }
-      if (map[ty][tx] === 0 || map[ty][tx] === 2) {
-        const newMap = clone(map);
-        newMap[ty][tx] = 4;
-        newMap[py][px] = 0;
-        setMap(newMap);
-        setMoves(m => m + 1);
-      }
+      move(dx, dy);
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
@@ -63,6 +69,15 @@ export default function Game07() {
     setMap(clone(LEVEL[0]));
     setMoves(0);
   };
+
+  // 屏幕操作面板
+  const controls = [
+    { label: '↑', onClick: () => move(0, -1) },
+    { label: '↓', onClick: () => move(0, 1) },
+    { label: '←', onClick: () => move(-1, 0) },
+    { label: '→', onClick: () => move(1, 0) },
+    { label: '重开', onClick: restart },
+  ];
 
   return (
     <div style={{ width: 260, margin: '0 auto' }}>
@@ -81,7 +96,13 @@ export default function Game07() {
         })}
       </div>
       {isWin(map) && <div style={{ color: '#22c55e', fontWeight: 700, marginTop: 12 }}>恭喜通关！</div>}
-      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>用方向键推动箱子到目标点，全部完成即通关！</div>
+      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>用方向键或下方按钮推动箱子到目标点，全部完成即通关！</div>
+      {/* 屏幕操作面板 */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 16 }}>
+        {controls.map((c, i) => (
+          <button key={i} onClick={c.onClick} style={{ minWidth: 48, minHeight: 48, fontSize: 20, borderRadius: 12, background: '#f3f4f6', border: '2px solid #2563eb', color: '#2563eb', fontWeight: 700, boxShadow: '0 1px 4px #0001', cursor: 'pointer', margin: 4 }}>{c.label}</button>
+        ))}
+      </div>
     </div>
   );
 } 
