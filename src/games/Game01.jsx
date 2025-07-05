@@ -93,6 +93,23 @@ export default function Game01() {
     setOver(false);
   };
 
+  // 屏幕操作面板
+  const moveDir = (dir) => {
+    if (over) return;
+    const { board: newBoard, moved, score: addScore } = move(board, dir);
+    if (moved) {
+      setBoard(addRandom(newBoard));
+      setScore(s => s + addScore);
+    }
+  };
+  const controls = [
+    { label: '↑', onClick: () => moveDir('up') },
+    { label: '↓', onClick: () => moveDir('down') },
+    { label: '←', onClick: () => moveDir('left') },
+    { label: '→', onClick: () => moveDir('right') },
+    { label: '重开', onClick: restart },
+  ];
+
   return (
     <div style={{ width: 320, margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -105,7 +122,13 @@ export default function Game01() {
         ))}
       </div>
       {over && <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 12 }}>游戏结束！</div>}
-      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>用方向键移动方块，合成2048！</div>
+      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>用方向键或下方按钮移动方块，合成2048！</div>
+      {/* 屏幕操作面板 */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 16 }}>
+        {controls.map((c, i) => (
+          <button key={i} onClick={c.onClick} style={{ minWidth: 48, minHeight: 48, fontSize: 20, borderRadius: 12, background: '#f3f4f6', border: '2px solid #2563eb', color: '#2563eb', fontWeight: 700, boxShadow: '0 1px 4px #0001', cursor: 'pointer', margin: 4 }}>{c.label}</button>
+        ))}
+      </div>
     </div>
   );
 } 
