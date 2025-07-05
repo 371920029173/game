@@ -12,6 +12,15 @@ export default function Game33() {
   const vy = useRef(0);
   const raf = useRef();
 
+  // 跳跃动作
+  const jumpAction = () => {
+    if (!over && playerY >= GROUND) {
+      vy.current = -13;
+      setJump(true);
+      setTimeout(() => setJump(false), 200);
+    }
+  };
+
   useEffect(() => {
     if (over) return;
     const loop = () => {
@@ -47,9 +56,7 @@ export default function Game33() {
   useEffect(() => {
     const onKey = e => {
       if (e.code === 'Space' && !over && playerY >= GROUND) {
-        vy.current = -13;
-        setJump(true);
-        setTimeout(() => setJump(false), 200);
+        jumpAction();
       }
       if (e.key === 'r' && over) restart();
     };
@@ -69,11 +76,17 @@ export default function Game33() {
       </div>
       <svg width={GAME_W} height={GAME_H} style={{ background: '#e0e7ef', borderRadius: 12 }}>
         <rect x={0} y={GROUND + PLAYER_H} width={GAME_W} height={GAME_H - GROUND - PLAYER_H} fill="#64748b" />
-        <rect x={40} y={playerY} width={PLAYER_W} height={PLAYER_H} rx={4} fill={jump ? '#fbbf24' : '#2563eb'} />
+        <rect x={40} y={playerY} width={PLAYER_W} height={PLAYER_H} rx={4} fill={jump ? '#fbbf24' : '#2563eb'}
+          style={{ transition: 'transform 0.18s cubic-bezier(.68,-0.55,.27,1.55)', transform: jump ? 'scaleY(0.7)' : 'scaleY(1)' }} />
         <rect x={star.x} y={star.y} width={STAR_W} height={STAR_H} rx={8} fill="#fbbf24" />
       </svg>
       {over && <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 12 }}>游戏结束！分数: {score}，按R重开</div>}
-      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>空格跳跃，收集星星，挑战高分！</div>
+      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>空格或下方按钮跳跃，收集星星，挑战高分！</div>
+      {/* 屏幕操作面板 */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 16 }}>
+        <button onClick={jumpAction} style={{ minWidth: 64, minHeight: 48, fontSize: 20, borderRadius: 12, background: '#f3f4f6', border: '2px solid #2563eb', color: '#2563eb', fontWeight: 700, boxShadow: '0 1px 4px #0001', cursor: 'pointer', margin: 4 }}>跳跃</button>
+        <button onClick={restart} style={{ minWidth: 64, minHeight: 48, fontSize: 20, borderRadius: 12, background: '#f3f4f6', border: '2px solid #2563eb', color: '#2563eb', fontWeight: 700, boxShadow: '0 1px 4px #0001', cursor: 'pointer', margin: 4 }}>重开</button>
+      </div>
     </div>
   );
 } 

@@ -4,6 +4,23 @@ const SIZE = 4;
 const getEmptyBoard = () => Array(SIZE).fill(0).map(() => Array(SIZE).fill(0));
 const getRandomInt = (max) => Math.floor(Math.random() * max);
 
+// 颜色映射
+const COLOR_MAP = {
+  2: '#fbbf24',
+  4: '#f87171',
+  8: '#34d399',
+  16: '#60a5fa',
+  32: '#a78bfa',
+  64: '#f472b6',
+  128: '#facc15',
+  256: '#fb7185',
+  512: '#38bdf8',
+  1024: '#a3e635',
+  2048: '#f59e42',
+  4096: '#e879f9',
+  8192: '#f43f5e'
+};
+
 function addRandom(board) {
   const empty = [];
   for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) if (!board[r][c]) empty.push([r, c]);
@@ -118,7 +135,7 @@ export default function Game01() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIZE}, 1fr)`, gap: 6, background: '#bdbdbd', padding: 6, borderRadius: 8 }}>
         {board.flat().map((n, i) => (
-          <div key={i} aria-label={n ? `数字${n}` : '空格'} title={n ? `数字${n}` : '空格'} style={{ height: 60, background: n ? '#fbbf24' : '#f3f4f6', color: n ? '#fff' : '#bdbdbd', fontWeight: 700, fontSize: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, boxShadow: n ? '0 1px 4px #0002' : 'none', transition: 'all .2s' }}>{n || ''}</div>
+          <div key={i} aria-label={n ? `数字${n}` : '空格'} title={n ? `数字${n}` : '空格'} style={{ height: 60, background: n ? (COLOR_MAP[n] || '#fbbf24') : '#f3f4f6', color: n ? '#fff' : '#bdbdbd', fontWeight: 700, fontSize: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, boxShadow: n ? '0 1px 4px #0002' : 'none', transition: 'all .2s' }}>{n || ''}</div>
         ))}
       </div>
       {over && <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 12 }}>游戏结束！</div>}

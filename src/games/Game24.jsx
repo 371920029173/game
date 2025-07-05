@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 // 自动生成500道多样化找规律题
 function genSeqs() {
@@ -69,15 +69,25 @@ export default function Game24() {
   const [input, setInput] = useState('');
   const [msg, setMsg] = useState('');
   const [score, setScore] = useState(0);
+  const [anim, setAnim] = useState('');
+  const inputRef = useRef();
 
   const check = () => {
     if (Number(input) === q.ans) {
       setMsg('恭喜答对！+1分');
       setScore(s => s + 1);
-      setQ(randomSeq());
-      setInput('');
+      setAnim('right');
+      setTimeout(() => {
+        setQ(randomSeq());
+        setInput('');
+        setAnim('');
+        inputRef.current && inputRef.current.focus();
+      }, 600);
     } else {
       setMsg('答错了，再试试！');
+      setAnim('wrong');
+      setTimeout(() => setAnim(''), 600);
+      inputRef.current && inputRef.current.focus();
     }
   };
   const restart = () => {
@@ -85,7 +95,12 @@ export default function Game24() {
     setInput('');
     setMsg('');
     setScore(0);
+    setAnim('');
+    setTimeout(() => { inputRef.current && inputRef.current.focus(); }, 100);
   };
+  React.useEffect(() => {
+    inputRef.current && inputRef.current.focus();
+  }, []);
   return (
     <div style={{ width: 320, margin: '0 auto', textAlign: 'center' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -93,8 +108,8 @@ export default function Game24() {
         <button onClick={restart} style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 12px', cursor: 'pointer' }}>重开</button>
       </div>
       <div style={{ fontSize: 20, marginBottom: 12, color: '#64748b' }}>找规律填空（{q.tip}）：</div>
-      <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 16, letterSpacing: 4 }}>{q.seq.map((n, i) => n === 0 ? '___' : n).join(' , ')}</div>
-      <input value={input} onChange={e => setInput(e.target.value.replace(/\D/g, ''))} style={{ fontSize: 22, padding: 8, borderRadius: 8, border: '1px solid #e5e7eb', width: 100, textAlign: 'center', marginBottom: 12 }} placeholder="填空" />
+      <div className={anim ? `seq-anim-${anim}` : ''} style={{ fontSize: 28, fontWeight: 700, marginBottom: 16, letterSpacing: 4, transition: 'background 0.3s' }}>{q.seq.map((n, i) => n === 0 ? '___' : n).join(' , ')}</div>
+      <input ref={inputRef} value={input} onChange={e => setInput(e.target.value.replace(/\D/g, ''))} style={{ fontSize: 22, padding: 8, borderRadius: 8, border: '1px solid #e5e7eb', width: 100, textAlign: 'center', marginBottom: 12 }} placeholder="填空" />
       <button onClick={check} style={{ background: '#22c55e', color: '#fff', border: 'none', borderRadius: 6, padding: '8px 24px', fontWeight: 700, fontSize: 18, cursor: 'pointer', marginLeft: 12 }}>提交</button>
       <div style={{ color: msg.includes('恭喜') ? '#22c55e' : '#ef4444', fontWeight: 700, marginTop: 8 }}>{msg}</div>
       <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>观察数列规律，填入正确数字得分！</div>

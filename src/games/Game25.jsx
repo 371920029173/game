@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 const COLORS = ['#fbbf24', '#38bdf8', '#ef4444', '#22d3ee', '#a3e635'];
 function genSeq(len) {
@@ -12,6 +12,8 @@ export default function Game25() {
   const [show, setShow] = useState(true);
   const [input, setInput] = useState([]);
   const [msg, setMsg] = useState('');
+  const [countdown, setCountdown] = useState(0);
+  const timerRef = useRef();
 
   const start = () => {
     const nextLevel = Math.min(level, MAX_LEVEL);
@@ -19,7 +21,23 @@ export default function Game25() {
     setShow(true);
     setInput([]);
     setMsg('');
-    setTimeout(() => setShow(false), 1200 + nextLevel * 400);
+    const time = Math.ceil((1200 + nextLevel * 400) / 1000);
+    setCountdown(time);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCountdown(c => {
+        if (c <= 1) {
+          clearInterval(timerRef.current);
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1000);
+    setTimeout(() => {
+      setShow(false);
+      setCountdown(0);
+      clearInterval(timerRef.current);
+    }, 1200 + nextLevel * 400);
   };
   const handleClick = c => {
     if (show) return;
@@ -39,13 +57,14 @@ export default function Game25() {
       return next;
     });
   };
-  React.useEffect(() => { start(); }, []);
+  React.useEffect(() => { start(); return () => { clearInterval(timerRef.current); }; }, []);
   return (
     <div style={{ width: 320, margin: '0 auto', textAlign: 'center' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
         <span>颜色记忆大师 | 关卡: {level}</span>
         <button onClick={start} style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 12px', cursor: 'pointer' }}>重开</button>
       </div>
+      {show && <div style={{ color: '#ef4444', fontWeight: 700, marginBottom: 4 }}>记忆倒计时：{countdown}s</div>}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 16 }}>
         {(show ? seq : input).map((c, i) => (
           <div key={i} style={{ width: 40, height: 40, background: c, borderRadius: 8, boxShadow: '0 1px 4px #0002', border: '2px solid #fff' }} />

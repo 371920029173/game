@@ -69,3 +69,29 @@
     font-size: 13px !important;
   }
 }
+
+.seq-anim-right {
+  animation: seqRight 0.6s;
+}
+@keyframes seqRight {
+  0% { background: #fff; }
+  30% { background: #bbf7d0; }
+  100% { background: #fff; }
+}
+.seq-anim-wrong {
+  animation: seqWrong 0.6s;
+}
+@keyframes seqWrong {
+  0% { background: #fff; }
+  30% { background: #fecaca; }
+  100% { background: #fff; }
+}
+
+.num-anim-right {
+  animation: numRight 0.3s;
+}
+@keyframes numRight {
+  0% { background: #fbbf24; }
+  50% { background: #bbf7d0; }
+  100% { background: #a3e635; }
+}

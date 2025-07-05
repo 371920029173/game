@@ -8,6 +8,23 @@ function getIdx(x, y) { return y * SIZE + x; }
 function getXY(idx) { return [idx % SIZE, Math.floor(idx / SIZE)]; }
 function canMerge(a, b) { return a && b && a === b; }
 
+// 颜色映射
+const COLOR_MAP = {
+  2: '#fbbf24',
+  4: '#f87171',
+  8: '#34d399',
+  16: '#60a5fa',
+  32: '#a78bfa',
+  64: '#f472b6',
+  128: '#facc15',
+  256: '#fb7185',
+  512: '#38bdf8',
+  1024: '#a3e635',
+  2048: '#f59e42',
+  4096: '#e879f9',
+  8192: '#f43f5e',
+};
+
 export default function Game30() {
   const [board, setBoard] = useState(genBoard());
   const [score, setScore] = useState(0);
@@ -110,7 +127,7 @@ export default function Game30() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIZE}, 1fr)`, gap: 6, background: '#bdbdbd', padding: 6, borderRadius: 8, marginBottom: 12 }}>
         {board.map((n, i) => (
-          <div key={i} onClick={() => handleClick(i)} style={{ width: 40, height: 40, background: n ? '#fbbf24' : '#f3f4f6', color: n ? '#fff' : '#bdbdbd', fontWeight: 700, fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, boxShadow: '0 1px 4px #0002', cursor: n ? 'pointer' : 'default', userSelect: 'none', border: selected === i ? '2px solid #ef4444' : 'none', transition: 'all .2s' }}>{n || ''}</div>
+          <div key={i} onClick={() => handleClick(i)} style={{ width: 40, height: 40, background: n ? (COLOR_MAP[n] || '#fbbf24') : '#f3f4f6', color: n && n <= 4 ? '#fff' : '#fff', fontWeight: 700, fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, boxShadow: '0 1px 4px #0002', cursor: n ? 'pointer' : 'default', userSelect: 'none', border: selected === i ? '2px solid #ef4444' : 'none', transition: 'all .2s' }}>{n || ''}</div>
         ))}
       </div>
       <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>点击两个相邻相同数字合成，挑战更高分数！</div>

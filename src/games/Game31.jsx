@@ -9,7 +9,8 @@ export default function Game31() {
   const [over, setOver] = useState(false);
   const [jump, setJump] = useState(false);
   const [playerY, setPlayerY] = useState(GROUND);
-  const [obstacles, setObstacles] = useState([{ x: 400 }]);
+  const [obstacles, setObstacles] = useState([{ x: 400, hit: false }]);
+  const [hitIdx, setHitIdx] = useState(null);
   const vy = useRef(0);
   const raf = useRef();
 
@@ -17,8 +18,8 @@ export default function Game31() {
     if (over) return;
     const loop = () => {
       setObstacles(obs => {
-        let next = obs.map(o => ({ ...o, x: o.x - 3 }));
-        if (next[0].x < GAME_W - randomGap()) next.push({ x: GAME_W + Math.random() * 60 });
+        let next = obs.map((o, idx) => ({ ...o, x: o.x - 3, hit: o.hit }));
+        if (next[0].x < GAME_W - randomGap()) next.push({ x: GAME_W + Math.random() * 60, hit: false });
         if (next[0].x < -OBST_W) next.shift();
         return next;
       });
@@ -39,15 +40,20 @@ export default function Game31() {
 
   useEffect(() => {
     if (over) return;
-    for (const o of obstacles) {
+    obstacles.forEach((o, idx) => {
       if (
         o.x < 40 + PLAYER_W && o.x + OBST_W > 40 &&
         playerY + PLAYER_H > GROUND && playerY < GROUND + OBST_H
       ) {
         setOver(true);
-        break;
+        setHitIdx(idx);
+        setObstacles(obs => obs.map((ob, i) => i === idx ? { ...ob, hit: true } : ob));
+        setTimeout(() => {
+          setObstacles(obs => obs.filter((_, i) => i !== idx));
+          setHitIdx(null);
+        }, 400);
       }
-    }
+    });
   }, [obstacles, playerY, over]);
 
   // 新增：暴露jump和restart到window，供ScreenControls直接调用
@@ -93,7 +99,8 @@ export default function Game31() {
         <rect x={0} y={GROUND + PLAYER_H} width={GAME_W} height={GAME_H - GROUND - PLAYER_H} fill="#64748b" />
         <rect x={40} y={playerY} width={PLAYER_W} height={PLAYER_H} rx={6} fill={jump ? '#fbbf24' : '#2563eb'} />
         {obstacles.map((o, i) => (
-          <rect key={i} x={o.x} y={GROUND} width={OBST_W} height={OBST_H} rx={4} fill="#ef4444" />
+          <rect key={i} x={o.x} y={GROUND} width={OBST_W} height={OBST_H} rx={4} fill="#ef4444"
+            style={o.hit ? { transform: 'scale(1.2) rotate(-18deg)', transition: 'transform 0.2s cubic-bezier(.68,-0.55,.27,1.55)', filter: 'brightness(1.2)' } : { transition: 'transform 0.2s' }} />
         ))}
       </svg>
       {over && <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 12 }}>游戏结束！分数: {score}，按R重开</div>}
