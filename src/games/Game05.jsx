@@ -53,8 +53,9 @@ export default function Game05() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, background: '#bdbdbd', padding: 8, borderRadius: 8 }}>
         {cards.map((n, i) => {
           const show = flipped.includes(i) || matched.includes(i);
+          let label = show ? `数字${n+1}` : '未翻开';
           return (
-            <div key={i} onClick={() => handleClick(i)} style={{ width: 70, height: 70, background: show ? '#fbbf24' : '#f3f4f6', color: show ? '#fff' : '#bdbdbd', fontWeight: 700, fontSize: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, boxShadow: '0 1px 4px #0002', cursor: show || lock ? 'not-allowed' : 'pointer', userSelect: 'none', transition: 'all .2s' }}>{show ? n + 1 : '?'}</div>
+            <div key={i} aria-label={label} title={label} onClick={() => handleClick(i)} style={{ width: 70, height: 70, background: show ? '#fbbf24' : '#f3f4f6', color: show ? '#fff' : '#bdbdbd', fontWeight: 700, fontSize: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, boxShadow: '0 1px 4px #0002', cursor: show || lock ? 'not-allowed' : 'pointer', userSelect: 'none', transition: 'all .2s' }}>{show ? n + 1 : '?'}</div>
           );
         })}
       </div>

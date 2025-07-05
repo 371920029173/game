@@ -97,7 +97,8 @@ export default function Game02() {
           const isHead = snake[0].x === x && snake[0].y === y;
           const isBody = snake.some((s, idx) => idx > 0 && s.x === x && s.y === y);
           const isFood = food.x === x && food.y === y;
-          return <div key={i} style={{ width: 20, height: 20, background: isHead ? '#22d3ee' : isBody ? '#38bdf8' : isFood ? '#fbbf24' : '#f3f4f6', borderRadius: 4, border: isHead ? '2px solid #0ea5e9' : 'none', transition: 'all .1s' }} />;
+          let label = isHead ? '蛇头' : isBody ? '蛇身' : isFood ? '食物' : '空格';
+          return <div key={i} aria-label={label} title={label} style={{ width: 20, height: 20, background: isHead ? '#22d3ee' : isBody ? '#38bdf8' : isFood ? '#fbbf24' : '#f3f4f6', borderRadius: 4, border: isHead ? '2px solid #0ea5e9' : 'none', transition: 'all .1s' }} />;
         })}
       </div>
       {over && <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 12 }}>游戏结束！</div>}

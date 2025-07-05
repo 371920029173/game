@@ -81,16 +81,21 @@ export default function Game03() {
         <button onClick={restart} style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 12px', cursor: 'pointer' }}>重开</button>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIZE}, 1fr)`, gap: 2, background: '#bdbdbd', padding: 4, borderRadius: 8 }}>
-        {board.map((row, r) => row.map((cell, c) => (
-          <div
-            key={r + '-' + c}
-            onClick={e => handleCell(r, c, e)}
-            onContextMenu={e => handleCell(r, c, e)}
-            style={{ width: 32, height: 32, background: cell.open ? (cell.mine ? '#ef4444' : '#fff') : '#f3f4f6', color: cell.mine ? '#fff' : '#374151', fontWeight: 700, fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, boxShadow: '0 1px 2px #0001', cursor: over || win ? 'not-allowed' : 'pointer', userSelect: 'none', border: cell.flag ? '2px solid #fbbf24' : 'none' }}
-          >
-            {cell.open ? (cell.mine ? '💣' : (cell.count || '')) : (cell.flag ? '🚩' : '')}
-          </div>
-        )))}
+        {board.map((row, r) => row.map((cell, c) => {
+          let label = cell.open ? (cell.mine ? '地雷' : (cell.count ? `数字${cell.count}` : '空格')) : (cell.flag ? '旗帜' : '未开格');
+          return (
+            <div
+              key={r + '-' + c}
+              aria-label={label}
+              title={label}
+              onClick={e => handleCell(r, c, e)}
+              onContextMenu={e => handleCell(r, c, e)}
+              style={{ width: 32, height: 32, background: cell.open ? (cell.mine ? '#ef4444' : '#fff') : '#f3f4f6', color: cell.mine ? '#fff' : '#374151', fontWeight: 700, fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, boxShadow: '0 1px 2px #0001', cursor: over || win ? 'not-allowed' : 'pointer', userSelect: 'none', border: cell.flag ? '2px solid #fbbf24' : 'none' }}
+            >
+              {cell.open ? (cell.mine ? '💣' : (cell.count || '')) : (cell.flag ? '🚩' : '')}
+            </div>
+          );
+        }))}
       </div>
       {over && <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 12 }}>游戏失败！</div>}
       {win && <div style={{ color: '#22c55e', fontWeight: 700, marginTop: 12 }}>恭喜通关！</div>}

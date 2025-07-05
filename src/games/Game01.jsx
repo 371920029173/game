@@ -101,7 +101,7 @@ export default function Game01() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIZE}, 1fr)`, gap: 6, background: '#bdbdbd', padding: 6, borderRadius: 8 }}>
         {board.flat().map((n, i) => (
-          <div key={i} style={{ height: 60, background: n ? '#fbbf24' : '#f3f4f6', color: n ? '#fff' : '#bdbdbd', fontWeight: 700, fontSize: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, boxShadow: n ? '0 1px 4px #0002' : 'none', transition: 'all .2s' }}>{n || ''}</div>
+          <div key={i} aria-label={n ? `数字${n}` : '空格'} title={n ? `数字${n}` : '空格'} style={{ height: 60, background: n ? '#fbbf24' : '#f3f4f6', color: n ? '#fff' : '#bdbdbd', fontWeight: 700, fontSize: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, boxShadow: n ? '0 1px 4px #0002' : 'none', transition: 'all .2s' }}>{n || ''}</div>
         ))}
       </div>
       {over && <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 12 }}>游戏结束！</div>}

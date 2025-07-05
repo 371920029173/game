@@ -1,5 +1,5 @@
 import { Routes, Route, useParams } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -121,7 +121,8 @@ function Home() {
           {shuffled.map((num, i) => (
             <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
               <a href={`#/game/${num}`} style={{ textDecoration: 'none' }}>
-                <button style={{ padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 600 }}
+                <button aria-label={gameNames[num-1] || `游戏${num}`} title={gameNames[num-1] || `游戏${num}`}
+                  style={{ padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 600 }}
                   onMouseOver={e => e.currentTarget.style.transform = 'scale(1.08)'}
                   onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
                   {gameNames[num-1] || `游戏${num}`}
@@ -167,8 +168,20 @@ function GamePage() {
   const { id } = useParams();
   const idx = Number(id) - 1;
   const GameComp = gameComponents[idx];
+  const contentRef = useRef();
   useEffect(() => {
     document.title = `${gameNames[idx] || `游戏${id}`} - 益智小游戏乐园`;
+    if (contentRef.current) {
+      contentRef.current.style.opacity = 0;
+      contentRef.current.style.transform = 'translateY(40px)';
+      setTimeout(() => {
+        if (contentRef.current) {
+          contentRef.current.style.transition = 'opacity 0.6s cubic-bezier(.4,0,.2,1), transform 0.6s cubic-bezier(.4,0,.2,1)';
+          contentRef.current.style.opacity = 1;
+          contentRef.current.style.transform = 'translateY(0)';
+        }
+      }, 60);
+    }
   }, [id]);
   // 互动区本地存储
   const likeKey = `game_like_${id}`
@@ -205,7 +218,7 @@ function GamePage() {
           <img src={adUrl(2)} alt="左广告" style={{ width: 180, height: 400, borderRadius: 12, boxShadow: '0 2px 12px #0001', objectFit: 'cover' }} />
         </div> */}
         {/* 游戏区 */}
-        <div style={{ flex: '1 1 600px', maxWidth: 600, minWidth: 320, background: '#fff', borderRadius: 16, boxShadow: '0 2px 16px #0002', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div ref={contentRef} style={{ flex: '1 1 600px', maxWidth: 600, minWidth: 320, background: '#fff', borderRadius: 16, boxShadow: '0 2px 16px #0002', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0, transform: 'translateY(40px)' }}>
           <h2 style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 16 }}>{gameNames[idx] || `游戏${id}`}</h2>
           <div style={{ width: '100%', height: 320, background: '#f3f4f6', borderRadius: 12, marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, color: '#9ca3af' }}>
             {GameComp ? <GameComp /> : `${gameNames[idx] || `游戏${id}`}内容区（待开发）`}

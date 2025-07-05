@@ -48,7 +48,7 @@ export default function Game06() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SIZE}, 1fr)`, gap: 6, background: '#bdbdbd', padding: 6, borderRadius: 8 }}>
         {tiles.map((n, i) => (
-          <div key={i} onClick={() => moveTile(i)} style={{ width: 60, height: 60, background: n ? '#fbbf24' : '#f3f4f6', color: n ? '#fff' : '#bdbdbd', fontWeight: 700, fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, boxShadow: '0 1px 4px #0002', cursor: n ? 'pointer' : 'default', userSelect: 'none', transition: 'all .2s' }}>{n || ''}</div>
+          <div key={i} aria-label={n ? `数字${n}` : '空格'} title={n ? `数字${n}` : '空格'} onClick={() => moveTile(i)} style={{ width: 60, height: 60, background: n ? '#fbbf24' : '#f3f4f6', color: n ? '#fff' : '#bdbdbd', fontWeight: 700, fontSize: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, boxShadow: '0 1px 4px #0002', cursor: n ? 'pointer' : 'default', userSelect: 'none', transition: 'all .2s' }}>{n || ''}</div>
         ))}
       </div>
       {isWin(tiles) && <div style={{ color: '#22c55e', fontWeight: 700, marginTop: 12 }}>恭喜通关！</div>}
