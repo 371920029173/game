@@ -232,8 +232,13 @@ function ScreenControls({ keys = ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"
     b: "B",
     r: "重开",
   };
-  // 触发键盘事件
+  // 触发键盘事件或定制事件
   const triggerKey = (key) => {
+    // 针对Game31定制
+    if (window.location.hash.startsWith('#/game/31')) {
+      if (key === ' ') { window.__game31_jump && window.__game31_jump(); return; }
+      if (key === 'r') { window.__game31_restart && window.__game31_restart(); return; }
+    }
     const e = new KeyboardEvent("keydown", { key, code: key === " " ? "Space" : key });
     window.dispatchEvent(e);
   };

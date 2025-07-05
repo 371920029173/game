@@ -50,17 +50,20 @@ export default function Game31() {
     }
   }, [obstacles, playerY, over]);
 
+  // 新增：暴露jump和restart到window，供ScreenControls直接调用
   useEffect(() => {
-    const onKey = e => {
-      if (e.code === 'Space' && !over && playerY >= GROUND) {
+    window.__game31_jump = () => {
+      if (!over && playerY >= GROUND) {
         vy.current = -13;
         setJump(true);
         setTimeout(() => setJump(false), 200);
       }
-      if (e.key === 'r' && over) restart();
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.__game31_restart = restart;
+    return () => {
+      delete window.__game31_jump;
+      delete window.__game31_restart;
+    };
   }, [over, playerY]);
 
   const restart = () => {
