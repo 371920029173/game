@@ -13,6 +13,64 @@ export default function Game30() {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState(null);
 
+  // 屏幕操作面板
+  const moveSel = dir => {
+    if (selected === null) {
+      setSelected(0);
+      return;
+    }
+    const [x, y] = getXY(selected);
+    let nx = x, ny = y;
+    if (dir === 'up') ny = Math.max(0, y - 1);
+    if (dir === 'down') ny = Math.min(SIZE - 1, y + 1);
+    if (dir === 'left') nx = Math.max(0, x - 1);
+    if (dir === 'right') nx = Math.min(SIZE - 1, x + 1);
+    setSelected(getIdx(nx, ny));
+  };
+  const mergeSel = () => {
+    if (selected === null) return;
+    const [x, y] = getXY(selected);
+    // 尝试与四周合成
+    const dirs = [[0,-1],[0,1],[-1,0],[1,0]];
+    for (const [dx, dy] of dirs) {
+      const nx = x + dx, ny = y + dy;
+      if (nx < 0 || nx >= SIZE || ny < 0 || ny >= SIZE) continue;
+      const ni = getIdx(nx, ny);
+      if (canMerge(board[selected], board[ni])) {
+        const newBoard = board.slice();
+        newBoard[ni] *= 2;
+        newBoard[selected] = 0;
+        setScore(s => s + newBoard[ni]);
+        // 下落补空
+        for (let cx = 0; cx < SIZE; cx++) {
+          let col = [];
+          for (let cy = 0; cy < SIZE; cy++) {
+            const i = getIdx(cx, cy);
+            if (newBoard[i]) col.push(newBoard[i]);
+          }
+          while (col.length < SIZE) col.unshift(Math.random() < 0.7 ? 2 : 4);
+          for (let cy = 0; cy < SIZE; cy++) newBoard[getIdx(cx, cy)] = col[cy];
+        }
+        setBoard(newBoard);
+        setSelected(null);
+        return;
+      }
+    }
+  };
+  const restart = () => {
+    setBoard(genBoard());
+    setScore(0);
+    setSelected(null);
+  };
+  const controls = [
+    { label: '↑', onClick: () => moveSel('up') },
+    { label: '↓', onClick: () => moveSel('down') },
+    { label: '←', onClick: () => moveSel('left') },
+    { label: '→', onClick: () => moveSel('right') },
+    { label: '合成', onClick: mergeSel },
+    { label: '重开', onClick: restart },
+  ];
+
   const handleClick = idx => {
     if (selected === null) {
       setSelected(idx);
@@ -43,11 +101,7 @@ export default function Game30() {
       }
     }
   };
-  const restart = () => {
-    setBoard(genBoard());
-    setScore(0);
-    setSelected(null);
-  };
+
   return (
     <div style={{ width: 320, margin: '0 auto', textAlign: 'center' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -60,6 +114,12 @@ export default function Game30() {
         ))}
       </div>
       <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>点击两个相邻相同数字合成，挑战更高分数！</div>
+      {/* 屏幕操作面板 */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 16 }}>
+        {controls.map((c, i) => (
+          <button key={i} onClick={c.onClick} style={{ minWidth: 48, minHeight: 48, fontSize: 20, borderRadius: 12, background: '#f3f4f6', border: '2px solid #2563eb', color: '#2563eb', fontWeight: 700, boxShadow: '0 1px 4px #0001', cursor: 'pointer', margin: 4 }}>{c.label}</button>
+        ))}
+      </div>
     </div>
   );
 } 
