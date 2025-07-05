@@ -219,6 +219,34 @@ const gameComponents = [
   Game21, Game22, Game23, Game24, Game25, Game26, Game27, Game28, Game29, Game30,
   Game31, Game32, Game33, Game34, Game35
 ];
+// 通用屏幕操作按键组件
+function ScreenControls({ keys = ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," ","a","b","r"], className }) {
+  // 键名与显示映射
+  const keyMap = {
+    ArrowUp: "↑",
+    ArrowDown: "↓",
+    ArrowLeft: "←",
+    ArrowRight: "→",
+    " ": "空格",
+    a: "A",
+    b: "B",
+    r: "重开",
+  };
+  // 触发键盘事件
+  const triggerKey = (key) => {
+    const e = new KeyboardEvent("keydown", { key, code: key === " " ? "Space" : key });
+    window.dispatchEvent(e);
+  };
+  return (
+    <div className={className} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 24 }}>
+      {keys.map(k => (
+        <button key={k} onClick={() => triggerKey(k)} style={{ minWidth: 48, minHeight: 48, fontSize: 20, borderRadius: 12, background: "#f3f4f6", border: "2px solid #2563eb", color: "#2563eb", fontWeight: 700, boxShadow: "0 1px 4px #0001", cursor: "pointer", margin: 4 }}>
+          {keyMap[k] || k}
+        </button>
+      ))}
+    </div>
+  );
+}
 function GamePage() {
   const { id } = useParams();
   const idx = Number(id) - 1;
@@ -269,7 +297,7 @@ function GamePage() {
       </div>
       <div style={{ width: '100%', flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 24, boxSizing: 'border-box' }}>
         {/* 游戏区 */}
-        <div ref={contentRef} style={{ maxWidth: 480, margin: '0 auto', background: '#fff', borderRadius: 16, boxShadow: '0 2px 12px #0001', padding: 24, marginTop: 32 }}>
+        <div ref={contentRef} className="game-content" style={{ maxWidth: 480, margin: '0 auto', background: '#fff', borderRadius: 16, boxShadow: '0 2px 12px #0001', padding: 24, marginTop: 32 }}>
           <h2 style={{ textAlign: 'center', fontWeight: 800, fontSize: '2rem', color: '#222', marginBottom: 16 }}>{gameNames[idx] || `游戏${id}`}</h2>
           <div style={{ width: '100%', height: 'min(320px,40vw)', background: '#f3f4f6', borderRadius: 12, marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, color: '#9ca3af', minHeight: 180 }}>
             {GameComp ? <GameComp /> : `${gameNames[idx] || `游戏${id}`}内容区（待开发）`}
@@ -292,6 +320,8 @@ function GamePage() {
             <h3 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>玩法与目的</h3>
             <div>{gameNames[idx] || `游戏${id}`}的玩法与目标介绍。</div>
           </div>
+          {/* 屏幕操作按键区 */}
+          <ScreenControls className="screen-controls" />
         </div>
       </div>
     </div>

@@ -40,3 +40,32 @@
 .read-the-docs {
   color: #888;
 }
+
+/* 响应式优化 for GamePage/ScreenControls */
+@media (max-width: 600px) {
+  .game-content {
+    max-width: 98vw !important;
+    padding: 8px !important;
+    margin-top: 8px !important;
+  }
+  .screen-controls {
+    gap: 8px !important;
+  }
+  .screen-controls button {
+    min-width: 38px !important;
+    min-height: 38px !important;
+    font-size: 16px !important;
+    border-radius: 8px !important;
+  }
+}
+@media (max-width: 400px) {
+  .game-content {
+    max-width: 100vw !important;
+    padding: 2px !important;
+  }
+  .screen-controls button {
+    min-width: 28px !important;
+    min-height: 28px !important;
+    font-size: 13px !important;
+  }
+}
