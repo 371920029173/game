@@ -85,6 +85,25 @@ export default function Game02() {
     setScore(0);
   };
 
+  // 屏幕操作面板
+  const setDirSafe = (key) => {
+    if (over) return;
+    setDir(d => {
+      if (d === 'ArrowUp' && key === 'ArrowDown') return d;
+      if (d === 'ArrowDown' && key === 'ArrowUp') return d;
+      if (d === 'ArrowLeft' && key === 'ArrowRight') return d;
+      if (d === 'ArrowRight' && key === 'ArrowLeft') return d;
+      return key;
+    });
+  };
+  const controls = [
+    { label: '↑', onClick: () => setDirSafe('ArrowUp') },
+    { label: '↓', onClick: () => setDirSafe('ArrowDown') },
+    { label: '←', onClick: () => setDirSafe('ArrowLeft') },
+    { label: '→', onClick: () => setDirSafe('ArrowRight') },
+    { label: '重开', onClick: restart },
+  ];
+
   return (
     <div style={{ width: 360, margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -102,7 +121,13 @@ export default function Game02() {
         })}
       </div>
       {over && <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 12 }}>游戏结束！</div>}
-      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>用方向键控制贪吃蛇，吃掉食物得分！</div>
+      <div style={{ color: '#64748b', fontSize: 14, marginTop: 8 }}>用方向键或下方按钮控制贪吃蛇，吃掉食物得分！</div>
+      {/* 屏幕操作面板 */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 16 }}>
+        {controls.map((c, i) => (
+          <button key={i} onClick={c.onClick} style={{ minWidth: 48, minHeight: 48, fontSize: 20, borderRadius: 12, background: '#f3f4f6', border: '2px solid #2563eb', color: '#2563eb', fontWeight: 700, boxShadow: '0 1px 4px #0001', cursor: 'pointer', margin: 4 }}>{c.label}</button>
+        ))}
+      </div>
     </div>
   );
 } 
