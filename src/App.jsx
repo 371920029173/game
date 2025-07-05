@@ -66,7 +66,8 @@ function AdBanner() {
     return () => clearInterval(timer)
   }, [])
   return (
-    <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', height: 120, overflow: 'hidden', borderRadius: 16, boxShadow: '0 2px 12px #0001', marginBottom: 32, position: 'relative', background: '#fff' }}>
+    <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', height: 120, overflow: 'hidden', borderRadius: 16, boxShadow: '0 2px 12px #0001', marginBottom: 32, position: 'relative', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, color: '#333', fontWeight: 600 }}>
+      <span style={{ zIndex: 3, position: 'relative', background: 'rgba(255,255,255,0.8)', padding: '0 24px', borderRadius: 8 }}>益智小游戏乐园广告位，欢迎投放！</span>
       {adImages.map((img, i) => (
         <img
           key={i}
@@ -79,9 +80,9 @@ function AdBanner() {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            opacity: i === index ? 1 : 0,
+            opacity: i === index ? 0.3 : 0,
             transition: 'opacity 1s',
-            zIndex: i === index ? 2 : 1
+            zIndex: 1
           }}
         />
       ))}
@@ -98,6 +99,12 @@ function shuffle(arr) {
   return a;
 }
 
+const gameNames = [
+  '2048', '贪吃蛇', '扫雷', '五子棋', '翻牌配对', '华容道', '推箱子', '俄罗斯方块', '数独', '连连看',
+  '拼图', '记忆力', '消消乐', '拼单词', '数钱', '找不同', '拼图2', '迷宫', '打地鼠', '猜数字',
+  '数独2', '数独3', '数独4', '数独5', '数独6', '数独7', '数独8', '数独9', '数独10', '数独11',
+  '跑酷1', '跑酷2', '跑酷3', '跑酷4', '跑酷5'
+];
 function Home() {
   // 跑酷游戏索引
   const runnerGames = [30, 31, 32, 33, 34]; // Game31~Game35
@@ -115,7 +122,7 @@ function Home() {
               <button style={{ padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 600 }}
                 onMouseOver={e => e.currentTarget.style.transform = 'scale(1.08)'}
                 onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
-                {runnerGames.includes(num - 1) ? `跑酷${num - 30}` : `游戏${num}`}
+                {gameNames[num-1] || `游戏${num}`}
               </button>
             </a>
           ))}
@@ -157,12 +164,8 @@ function GamePage() {
   const idx = Number(id) - 1;
   const GameComp = gameComponents[idx];
   useEffect(() => {
-    document.title = `游戏${id} - 益智小游戏乐园`;
+    document.title = `${gameNames[idx] || `游戏${id}`} - 益智小游戏乐园`;
   }, [id]);
-  // 广告图片
-  const adUrl = (n) => `https://via.placeholder.com/180x400?text=广告${n}`
-  const adUrlH = (n) => `https://via.placeholder.com/900x80?text=广告${n}`
-
   // 互动区本地存储
   const likeKey = `game_like_${id}`
   const commentKey = `game_comment_${id}`
@@ -186,21 +189,20 @@ function GamePage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8fafc 0%,#e0e7ef 100%)', padding: 0 }}>
-      <GoogleAd />
       {/* 顶部广告 */}
       <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', marginTop: 24 }}>
-        <img src={adUrlH(1)} alt="顶部广告" style={{ width: '100%', borderRadius: 12, boxShadow: '0 2px 12px #0001' }} />
+        {/* <img src={adUrlH(1)} alt="顶部广告" style={{ width: '100%', borderRadius: 12, boxShadow: '0 2px 12px #0001' }} /> */}
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
         {/* 左广告 */}
-        <div style={{ flex: '0 0 180px', marginRight: 16 }}>
+        {/* <div style={{ flex: '0 0 180px', marginRight: 16 }}>
           <img src={adUrl(2)} alt="左广告" style={{ width: 180, height: 400, borderRadius: 12, boxShadow: '0 2px 12px #0001', objectFit: 'cover' }} />
-        </div>
+        </div> */}
         {/* 游戏区 */}
         <div style={{ flex: '1 1 600px', maxWidth: 600, minWidth: 320, background: '#fff', borderRadius: 16, boxShadow: '0 2px 16px #0002', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <h2 style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 16 }}>{`游戏${id}`}</h2>
+          <h2 style={{ fontWeight: 700, fontSize: '2rem', marginBottom: 16 }}>{gameNames[idx] || `游戏${id}`}</h2>
           <div style={{ width: '100%', height: 320, background: '#f3f4f6', borderRadius: 12, marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, color: '#9ca3af' }}>
-            {GameComp ? <GameComp /> : `游戏${id}内容区（待开发）`}
+            {GameComp ? <GameComp /> : `${gameNames[idx] || `游戏${id}`}内容区（待开发）`}
           </div>
           {/* 互动区 */}
           <div style={{ width: '100%', background: '#f9fafb', borderRadius: 8, padding: 16, marginBottom: 24, boxShadow: '0 1px 4px #0001' }}>
@@ -218,20 +220,15 @@ function GamePage() {
           {/* 玩法介绍区 */}
           <div style={{ width: '100%', background: '#f3f4f6', borderRadius: 8, padding: 18, color: '#374151', fontSize: 16, boxShadow: '0 1px 4px #0001' }}>
             <h3 style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>玩法与目的</h3>
-            <div>这里将详细介绍游戏{id}的玩法与目标。</div>
+            <div>{gameNames[idx] || `游戏${id}`}的玩法与目标介绍。</div>
           </div>
         </div>
         {/* 右广告 */}
-        <div style={{ flex: '0 0 180px', marginLeft: 16 }}>
+        {/* <div style={{ flex: '0 0 180px', marginLeft: 16 }}>
           <img src={adUrl(3)} alt="右广告" style={{ width: 180, height: 400, borderRadius: 12, boxShadow: '0 2px 12px #0001', objectFit: 'cover' }} />
-        </div>
+        </div> */}
       </div>
-      {/* 底部广告 */}
-      <div style={{ width: '100%', maxWidth: 900, margin: '32px auto 0', display: 'flex', gap: 16, justifyContent: 'center' }}>
-        <img src={adUrlH(4)} alt="底部广告1" style={{ width: '50%', borderRadius: 12, boxShadow: '0 2px 12px #0001' }} />
-        <img src={adUrlH(5)} alt="底部广告2" style={{ width: '50%', borderRadius: 12, boxShadow: '0 2px 12px #0001' }} />
-      </div>
-      <GoogleAd />
+      {/* <GoogleAd /> */}
     </div>
   )
 }
