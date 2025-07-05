@@ -43,7 +43,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/game/:id" element={<GamePage />} />
+      <Route path="game/:id" element={<GamePage />} />
     </Routes>
   )
 }
@@ -118,7 +118,7 @@ function Home() {
         <p style={{ color: '#4b5563', fontSize: '1.2rem', marginBottom: 32 }}>欢迎来到益智小游戏乐园，点击下方按钮开始游戏！</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
           {shuffled.map((num, i) => (
-            <a key={i} href={`/game/${num}`} style={{ textDecoration: 'none' }}>
+            <a key={i} href={`#/game/${num}`} style={{ textDecoration: 'none' }}>
               <button style={{ padding: '1rem 2rem', fontSize: '1.2rem', borderRadius: '8px', margin: '0.5rem', cursor: 'pointer', background: '#fff', boxShadow: '0 2px 8px #0001', border: '1px solid #e5e7eb', transition: 'transform .2s', fontWeight: 600 }}
                 onMouseOver={e => e.currentTarget.style.transform = 'scale(1.08)'}
                 onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
